@@ -75,7 +75,7 @@ else
 
 #Assume the user not exist and create "UPN, CN and sAMAccountName"
 $AccountName = ($FirstName+"."+$LastName).ToLower()          # AccountName = walter.benjamin
-$PrincipalName = $AccountName + $MailSuffix                  # UPN = walter.benjamin@bbconsult.co.uk
+$PrincipalName = $AccountName + $MailSuffix                  # UPN = walter.benjamin@test1.co.uk
 $sAMAccountName = ($FirstName[0]+$LastName+$stri).ToLower()  # sAMAccountName = wbenjamin
 $Name = $DisplayName                                         # CN = walter benjamin
 
