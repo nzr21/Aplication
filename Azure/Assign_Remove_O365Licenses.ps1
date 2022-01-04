@@ -17,7 +17,7 @@ foreach ($user in $users)
 
         try{
             Set-MsolUser -UserPrincipalName $PrincipalName -UsageLocation TR
-            Set-MsolUserLicense -UserPrincipalName $PrincipalName -AddLicenses “adanabtuedutr:OFFICESUBSCRIPTION_STUDENT” -ErrorAction Stop
+            Set-MsolUserLicense -UserPrincipalName $PrincipalName -AddLicenses “TENANT:LICENSE” -ErrorAction Stop
             Write-Host "O365 license assigned to $PrincipalName"
         }
         catch [System.Exception] {
