@@ -1,4 +1,6 @@
-Connect-MsolService
+$cred = Get-Credential
+Connect-MsolService -Credential $cred
+Connect-AzureAD -Credential $cred
 
 Get-MsolAccountSku #list of licenses available in your tenant
 
@@ -8,13 +10,14 @@ $users = Get-MsolUser -All -UnlicensedUsersOnly | Select UserPrincipalName ,Bloc
 foreach ($user in $users)
 {
     $PrincipalName=$user.UserPrincipalName 
+    $accountEnabled = (Get-AzureADUser -ObjectId $PrincipalName).AccountEnabled
 
     #If the user does not hevae license, assign new license
-    if((Get-MsolUser -UserPrincipalName $PrincipalName | select -ExpandProperty BlockCredential) -eq "true") {
+    if($accountEnabled -eq "true") {
 
         try{
             Set-MsolUser -UserPrincipalName $PrincipalName -UsageLocation TR
-            Set-MsolUserLicense -UserPrincipalName $PrincipalName -AddLicenses “tenantname:Available License” -ErrorAction Stop
+            Set-MsolUserLicense -UserPrincipalName $PrincipalName -AddLicenses “adanabtuedutr:OFFICESUBSCRIPTION_STUDENT” -ErrorAction Stop
             Write-Host "O365 license assigned to $PrincipalName"
         }
         catch [System.Exception] {
@@ -30,7 +33,7 @@ foreach ($user in $users)
 {
     $PrincipalName=$user.UserPrincipalName 
 
-    if((Get-MsolUser -UserPrincipalName $PrincipalName | select -ExpandProperty BlockCredential) -eq "false") {
+    if((Get-MsolUser -UserPrincipalName $PrincipalName | select -ExpandProperty BlockCredential) -eq "true") {
 
         #Removing licenses from user accounts
         try{
@@ -45,3 +48,5 @@ foreach ($user in $users)
         }
     }
 }
+
+Disconnect-AzureAD
